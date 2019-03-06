@@ -1,4 +1,4 @@
-# wrangling-03 <img src="/img/logo.png" align="right" />
+# wrangling-04 <img src="/img/logo.png" align="right" />
 [![](https://img.shields.io/badge/seminar-data%20wrangling%20in%20r-brightgreen.svg)](https://github.com/slu-dss/wrangling-04/)
 [![](https://img.shields.io/badge/lesson%20status-stable-brightgreen.svg)](https://github.com/slu-dss/wrangling-04/)
 [![](https://img.shields.io/github/release/slu-dss/wrangling-04.svg?label=version)](https://github.com/slu-dss/wrangling-04/releases)
@@ -14,7 +14,7 @@ By the end of this lesson, learners should be able to:
 
 1. Create a basic grouped summary of the count of observations
 2. Construct more complex grouped summaries using window functions
-3. Integrated grouped summaries with other `dplyr` functions 
+3. Integrated grouped summaries with other `dplyr` functions
 
 ### Lesson Resources
 * The [`SETUP.md`](/references/SETUP.md) file in the [`references/`](/references) directory contains a list of packages required for this lesson
