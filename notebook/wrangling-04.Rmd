@@ -2,9 +2,9 @@
 title: "Wrangling 04 - Group By and Summarize - Completed Version"
 author: "Chirsty Garcia, Ph.D. and Christopher Prener, Ph.D."
 date: '(`r format(Sys.time(), "%B %d, %Y")`)'
-output: 
+output:
   github_document: default
-  html_notebook: default 
+  html_notebook: default
 ---
 
 ## Introduction
@@ -22,10 +22,9 @@ This notebook requires several other packages, including some `tidyverse` packag
 ```{r load-packages}
 # tidyverse packages
 library(dplyr)      # data wrangling
-library(readr)      # read tabular data
 
 # other packages
-library(gapminder)  # life expectancy data 
+library(gapminder)  # life expectancy data
 ```
 
 ## Load Data
@@ -138,7 +137,7 @@ mortality %>%
   arrange(desc(avg_lifeExp))
 ```
 
-Now we see our data in the opposite order - Oceania is first followed by Europe and then the Americas. 
+Now we see our data in the opposite order - Oceania is first followed by Europe and then the Americas.
 
 The return on investment isn't great here since we only have five values in `continent`, but with `country` we have 142 total values and so `arrange()` is far more useful. You try the same functionality but *per country* instead of *per continent*. First, sort low to high:
 
@@ -189,9 +188,9 @@ These are areas where there has been a significant shift over this time period.
 
 To really dig into that shift, we can calculate percent change over a time period. We filter based on the years of interest, and then create a variable for each `country` value that has the life expectancy for the first row per country and the last row per continent. Since the data have been sorted by year within countries, the first row is for 1952 and the last is for 2007. When we `filter()`, that order remains.
 
-We use `first()` to pull out the value in the first row and `last()` to pull out the value in the last row. We can then use those values to calculate percent change: 
+We use `first()` to pull out the value in the first row and `last()` to pull out the value in the last row. We can then use those values to calculate percent change:
 
-1. Subtract the original value from the most recent value, 
+1. Subtract the original value from the most recent value,
 2. divide by the original value,
 3. and multiple by 100.
 
