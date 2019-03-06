@@ -1,0 +1,218 @@
+---
+title: "Wrangling 04 - Group By and Summarize - Completed Version"
+author: "Chirsty Garcia, Ph.D. and Christopher Prener, Ph.D."
+date: '(`r format(Sys.time(), "%B %d, %Y")`)'
+output: 
+  github_document: default
+  html_notebook: default 
+---
+
+## Introduction
+This notebook introduces some final techniques for data wrangling using `dplyr` known as "grouped summaries."
+
+## Dependencies
+This notebook requires a new dependency - `gapminder`:
+
+```{r install-gapminder, eval = FALSE}
+install.packages("gapminder")
+```
+
+This notebook requires several other packages, including some `tidyverse` packages:
+
+```{r load-packages}
+# tidyverse packages
+library(dplyr)      # data wrangling
+library(readr)      # read tabular data
+
+# other packages
+library(gapminder)  # life expectancy data 
+```
+
+## Load Data
+This notebook requires some data on life expectancy by country during the post-war period:
+
+```{r load-data}
+mortality <- gapminder
+```
+
+## Basics of Grouped Summaries
+The basic idea of grouped summaries is that there are "grouping variables" within some data sets that you can aggregate data based on. These are typically categorical or ordinal variables. For instance, within the `mortality` data:
+
+```{r mortality-vars}
+str(mortality)
+```
+
+Within `mortality`, we could group our data by two categorical variables, `country` and `continent`, as well as an ordinal variable `year`. Each of these variables has a small but predictable set of values, each of which appears in multiple observations. This is the typical use case for grouped summaries.
+
+We group in a pipeline using two `dplyr` functions, `group_by()` and `summarise()` (`summarize()` works as well). For instance, we can group our `mortality` data by `continent`, and calculate the number observations (country-year combinations, like Afghanistan in 1952) per continent:
+
+```{r continent-n}
+mortality %>%
+  group_by(continent) %>%
+  summarise(records = n())
+```
+
+`group_by()` always returns the grouping variable, and whatever new variables are created in `summarise()`. In this case, we can see that out of the 1704 total observations in `mortality`, 624 are in Africa, 300 in the Americas, and so on.
+
+If all we need to do is produce these types of counts, there is a shortcut - `count()`:
+
+```{r continent-count}
+mortality %>%
+  count(continent)
+```
+
+Now, you try - calculate the number of records present in the data set *per year*:
+
+```{r year-count}
+
+```
+
+Here (and rather un-interestingly), we can see that each year as an equal number of observations. While boring, this is helpful to know as we go through the data wrangling process.
+
+## Window Functions
+
+We can do more than just count, however. For instance, we could calculate the average life expectancy for each continent between 1952 and 2007. We do this with what `dplyr` refers to as "window" functions, like `mean()`, `median()`, `min()`, `max()`, `sd()`, and `var()`:
+
+```{r continent-mean-lifeExp}
+mortality %>%
+  group_by(continent) %>%
+  summarise(avg_lifeExp = mean(lifeExp))
+```
+
+If you were to get output that had `NA` values for your new variable, add `na.rm = TRUE` to your window function call (i.e. `mean(lifeExp, na.rm = TRUE))`.
+
+Now, try this at the country level, calculating the mean life expectancy *per country* between 1952 and 2007:
+
+```{r country-mean-lifeExp}
+
+```
+
+We can calculate multiple new variables per `summarise()` call by separating each expression with a comma. For instance, we can calculate not just the mean life expectancy per continent but the median and standard deviation as well as obtaining a count of the total number of records:
+
+```{r continent-multiple-windows}
+mortality %>%
+  group_by(continent) %>%
+  summarise(
+    records = n(),
+    avg_lifeExp = mean(lifeExp),
+    med_lifeExp = median(lifeExp),
+    sd_lifeExp = sd(lifeExp)
+  )
+```
+
+Now, you try the same functionality but *per country* instead of *per continent*:
+
+```{r country-multiple-windows}
+
+```
+
+## Combining with Other Functions
+
+One helpful thing we can do is add an `arrange()` call on to our pipeline, which allows us to ask questions of our data like "which continents have the lowest mean life expectancy over this period" and "which continents have the highest". To sort our data from low to high, we use the `arrange()` function:
+
+```{r continent-arrange-low}
+mortality %>%
+  group_by(continent) %>%
+  summarise(
+    records = n(),
+    avg_lifeExp = mean(lifeExp),
+    med_lifeExp = median(lifeExp),
+    sd_lifeExp = sd(lifeExp)
+  ) %>%
+  arrange(avg_lifeExp)
+```
+
+We can see that Africa has the lowest mean life expectancy, followed by Asia and then the Americas.
+
+If we want to sort our data from high to low, we combine `arrange()` with `desc()`:
+
+```{r continent-arrange-high}
+mortality %>%
+  group_by(continent) %>%
+  summarise(
+    records = n(),
+    avg_lifeExp = mean(lifeExp),
+    med_lifeExp = median(lifeExp),
+    sd_lifeExp = sd(lifeExp)
+  ) %>%
+  arrange(desc(avg_lifeExp))
+```
+
+Now we see our data in the opposite order - Oceania is first followed by Europe and then the Americas. 
+
+The return on investment isn't great here since we only have five values in `continent`, but with `country` we have 142 total values and so `arrange()` is far more useful. You try the same functionality but *per country* instead of *per continent*. First, sort low to high:
+
+```{r country-arrange-low}
+
+```
+
+We see see that several African countries have the lowest mean life expectancy over this period (as well as Afghanistan).
+
+Then, sort high to low:
+
+```{r country-arrange-high}
+
+```
+
+We see that Iceland has the highest mean life expectancy over this period, followed by several other European countries.
+
+We can also add in a `filter()` statement to zero in on a ten-year period that contains three waves of data collection (1997, 2002, 2007) by using `filter()` prior to `group_by()`:
+
+```{r continent-millennium}
+mortality %>%
+  filter(year >= 1997 & year <= 2007) %>%
+  group_by(continent) %>%
+  summarise(
+    records = n(),
+    avg_lifeExp = mean(lifeExp),
+    med_lifeExp = median(lifeExp),
+    sd_lifeExp = sd(lifeExp)
+  ) %>%
+  arrange(avg_lifeExp)
+```
+
+Now, you try with countries over the first forty years in the data (from 1952 to 1992), which correspond to the cold war period:
+
+```{r country-cold-war}
+
+```
+
+Finally, change your sort to see which country had the *most* variation (using the `sd_lifeExp` variable):
+
+```{r country-cold-war-variation}
+
+```
+
+These are areas where there has been a significant shift over this time period.
+
+## More Complex Summaries
+
+To really dig into that shift, we can calculate percent change over a time period. We filter based on the years of interest, and then create a variable for each `country` value that has the life expectancy for the first row per country and the last row per continent. Since the data have been sorted by year within countries, the first row is for 1952 and the last is for 2007. When we `filter()`, that order remains.
+
+We use `first()` to pull out the value in the first row and `last()` to pull out the value in the last row. We can then use those values to calculate percent change: 
+
+1. Subtract the original value from the most recent value, 
+2. divide by the original value,
+3. and multiple by 100.
+
+We'll start by ordering the data from high to low to explore countries that have seen the most increases in life expectancy, and then click through our data to see what countries had the most decreases in life expectancy:
+
+```{r country-pct-change-millennium}
+mortality %>%
+  filter(year >= 1997 & year <= 2007) %>%
+  group_by(country) %>%
+  summarise(
+    lifeExp97 = first(lifeExp),
+    lifeExp07 = last(lifeExp),
+    pct_change = (last(lifeExp)-first(lifeExp))/first(lifeExp)*100
+  ) %>%
+  arrange(desc(pct_change))
+```
+
+Now, you try this, but over the cold war period from 1952 through 1992:
+
+```{r country-pct-change-cold-war}
+
+```
+
+Only one country had a decrease over this period, which was Rwanda (as a consequence of the genocide in the early 1990s there).
