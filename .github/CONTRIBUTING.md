@@ -84,5 +84,5 @@ Please note that this project is released with a [Contributor Code of
 Conduct](CODE_OF_CONDUCT.md). By participating in this project you agree to
 abide by its terms.
 
-[repoLink]: https://github.com/slu-dss/wrangling-03
-[issuesLink]: https://github.com/slu-dss/wrangling-03/issues
+[repoLink]: https://github.com/slu-dss/wrangling-04
+[issuesLink]: https://github.com/slu-dss/wrangling-04/issues
