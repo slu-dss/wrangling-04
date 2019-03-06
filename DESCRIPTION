@@ -1,4 +1,4 @@
-Package: wrangling-03
+Package: wrangling-04
 Title: Data Wrangling in R, Lesson 4 - Grouped Summaries
 Version: 0.1.0
 Authors@R: c(person("Christina","Garcia", , email = "christina.garcia@slu.edu",
