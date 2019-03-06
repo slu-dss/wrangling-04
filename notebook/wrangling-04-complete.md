@@ -36,10 +36,8 @@ library(dplyr)      # data wrangling
     ##     intersect, setdiff, setequal, union
 
 ``` r
-library(readr)      # read tabular data
-
 # other packages
-library(gapminder)  # life expectancy data 
+library(gapminder)  # life expectancy data
 ```
 
 ## Load Data
