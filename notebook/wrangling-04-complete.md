@@ -1,7 +1,7 @@
 Wrangling 04 - Group By and Summarize - Completed Version
 ================
 Chirsty Garcia, Ph.D. and Christopher Prener, Ph.D.
-(March 06, 2019)
+(March 09, 2022)
 
 ## Introduction
 
@@ -54,20 +54,19 @@ mortality <- gapminder
 The basic idea of grouped summaries is that there are “grouping
 variables” within some data sets that you can aggregate data based on.
 These are typically categorical or ordinal variables. For instance,
-within the `mortality`
-    data:
+within the `mortality` data:
 
 ``` r
 str(mortality)
 ```
 
-    ## Classes 'tbl_df', 'tbl' and 'data.frame':    1704 obs. of  6 variables:
+    ## tibble [1,704 × 6] (S3: tbl_df/tbl/data.frame)
     ##  $ country  : Factor w/ 142 levels "Afghanistan",..: 1 1 1 1 1 1 1 1 1 1 ...
     ##  $ continent: Factor w/ 5 levels "Africa","Americas",..: 3 3 3 3 3 3 3 3 3 3 ...
-    ##  $ year     : int  1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 ...
-    ##  $ lifeExp  : num  28.8 30.3 32 34 36.1 ...
-    ##  $ pop      : int  8425333 9240934 10267083 11537966 13079460 14880372 12881816 13867957 16317921 22227415 ...
-    ##  $ gdpPercap: num  779 821 853 836 740 ...
+    ##  $ year     : int [1:1704] 1952 1957 1962 1967 1972 1977 1982 1987 1992 1997 ...
+    ##  $ lifeExp  : num [1:1704] 28.8 30.3 32 34 36.1 ...
+    ##  $ pop      : int [1:1704] 8425333 9240934 10267083 11537966 13079460 14880372 12881816 13867957 16317921 22227415 ...
+    ##  $ gdpPercap: num [1:1704] 779 821 853 836 740 ...
 
 Within `mortality`, we could group our data by two categorical
 variables, `country` and `continent`, as well as an ordinal variable
@@ -87,7 +86,7 @@ mortality %>%
   summarise(records = n())
 ```
 
-    ## # A tibble: 5 x 2
+    ## # A tibble: 5 × 2
     ##   continent records
     ##   <fct>       <int>
     ## 1 Africa        624
@@ -109,7 +108,7 @@ mortality %>%
   count(continent)
 ```
 
-    ## # A tibble: 5 x 2
+    ## # A tibble: 5 × 2
     ##   continent     n
     ##   <fct>     <int>
     ## 1 Africa      624
@@ -126,7 +125,7 @@ mortality %>%
   count(year)
 ```
 
-    ## # A tibble: 12 x 2
+    ## # A tibble: 12 × 2
     ##     year     n
     ##    <int> <int>
     ##  1  1952   142
@@ -159,7 +158,7 @@ mortality %>%
   summarise(avg_lifeExp = mean(lifeExp))
 ```
 
-    ## # A tibble: 5 x 2
+    ## # A tibble: 5 × 2
     ##   continent avg_lifeExp
     ##   <fct>           <dbl>
     ## 1 Africa           48.9
@@ -169,8 +168,8 @@ mortality %>%
     ## 5 Oceania          74.3
 
 If you were to get output that had `NA` values for your new variable,
-add `na.rm = TRUE` to your window function call (i.e. `mean(lifeExp,
-na.rm = TRUE))`.
+add `na.rm = TRUE` to your window function call
+(i.e. `mean(lifeExp, na.rm = TRUE))`.
 
 Now, try this at the country level, calculating the mean life expectancy
 *per country* between 1952 and 2007:
@@ -181,7 +180,7 @@ mortality %>%
   summarise(avg_lifeExp = mean(lifeExp))
 ```
 
-    ## # A tibble: 142 x 2
+    ## # A tibble: 142 × 2
     ##    country     avg_lifeExp
     ##    <fct>             <dbl>
     ##  1 Afghanistan        37.5
@@ -213,7 +212,7 @@ mortality %>%
   )
 ```
 
-    ## # A tibble: 5 x 5
+    ## # A tibble: 5 × 5
     ##   continent records avg_lifeExp med_lifeExp sd_lifeExp
     ##   <fct>       <int>       <dbl>       <dbl>      <dbl>
     ## 1 Africa        624        48.9        47.8       9.15
@@ -236,7 +235,7 @@ mortality %>%
   )
 ```
 
-    ## # A tibble: 142 x 5
+    ## # A tibble: 142 × 5
     ##    country     records avg_lifeExp med_lifeExp sd_lifeExp
     ##    <fct>         <int>       <dbl>       <dbl>      <dbl>
     ##  1 Afghanistan      12        37.5        39.1       5.10
@@ -256,8 +255,8 @@ mortality %>%
 One helpful thing we can do is add an `arrange()` call on to our
 pipeline, which allows us to ask questions of our data like “which
 continents have the lowest mean life expectancy over this period” and
-“which continents have the highest”. To sort our data from low to
-high, we use the `arrange()` function:
+“which continents have the highest”. To sort our data from low to high,
+we use the `arrange()` function:
 
 ``` r
 mortality %>%
@@ -271,7 +270,7 @@ mortality %>%
   arrange(avg_lifeExp)
 ```
 
-    ## # A tibble: 5 x 5
+    ## # A tibble: 5 × 5
     ##   continent records avg_lifeExp med_lifeExp sd_lifeExp
     ##   <fct>       <int>       <dbl>       <dbl>      <dbl>
     ## 1 Africa        624        48.9        47.8       9.15
@@ -298,7 +297,7 @@ mortality %>%
   arrange(desc(avg_lifeExp))
 ```
 
-    ## # A tibble: 5 x 5
+    ## # A tibble: 5 × 5
     ##   continent records avg_lifeExp med_lifeExp sd_lifeExp
     ##   <fct>       <int>       <dbl>       <dbl>      <dbl>
     ## 1 Oceania        24        74.3        73.7       3.80
@@ -327,7 +326,7 @@ mortality %>%
   arrange(avg_lifeExp)
 ```
 
-    ## # A tibble: 142 x 5
+    ## # A tibble: 142 × 5
     ##    country           records avg_lifeExp med_lifeExp sd_lifeExp
     ##    <fct>               <int>       <dbl>       <dbl>      <dbl>
     ##  1 Sierra Leone           12        36.8        37.6       3.94
@@ -359,7 +358,7 @@ mortality %>%
   arrange(desc(avg_lifeExp))
 ```
 
-    ## # A tibble: 142 x 5
+    ## # A tibble: 142 × 5
     ##    country     records avg_lifeExp med_lifeExp sd_lifeExp
     ##    <fct>         <int>       <dbl>       <dbl>      <dbl>
     ##  1 Iceland          12        76.5        76.6       3.03
@@ -394,7 +393,7 @@ mortality %>%
   arrange(avg_lifeExp)
 ```
 
-    ## # A tibble: 5 x 5
+    ## # A tibble: 5 × 5
     ##   continent records avg_lifeExp med_lifeExp sd_lifeExp
     ##   <fct>       <int>       <dbl>       <dbl>      <dbl>
     ## 1 Africa        156        53.9        52.5       9.40
@@ -419,7 +418,7 @@ mortality %>%
   arrange(avg_lifeExp)
 ```
 
-    ## # A tibble: 142 x 5
+    ## # A tibble: 142 × 5
     ##    country           records avg_lifeExp med_lifeExp sd_lifeExp
     ##    <fct>               <int>       <dbl>       <dbl>      <dbl>
     ##  1 Sierra Leone            9        35.3        35.4       3.35
@@ -450,7 +449,7 @@ mortality %>%
   arrange(desc(sd_lifeExp))
 ```
 
-    ## # A tibble: 142 x 5
+    ## # A tibble: 142 × 5
     ##    country            records avg_lifeExp med_lifeExp sd_lifeExp
     ##    <fct>                <int>       <dbl>       <dbl>      <dbl>
     ##  1 Oman                     9        53.2        52.1      12.2 
@@ -502,7 +501,7 @@ mortality %>%
   arrange(desc(pct_change))
 ```
 
-    ## # A tibble: 142 x 4
+    ## # A tibble: 142 × 4
     ##    country          lifeExp97 lifeExp07 pct_change
     ##    <fct>                <dbl>     <dbl>      <dbl>
     ##  1 Rwanda                36.1      46.2      28.1 
@@ -531,7 +530,7 @@ mortality %>%
   arrange(desc(pct_change))
 ```
 
-    ## # A tibble: 142 x 4
+    ## # A tibble: 142 × 4
     ##    country            lifeExp97 lifeExp07 pct_change
     ##    <fct>                  <dbl>     <dbl>      <dbl>
     ##  1 Oman                    37.6      71.2       89.5
